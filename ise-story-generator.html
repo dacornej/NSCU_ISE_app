@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISE Story Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #cc0000;
+            margin-bottom: 30px;
+        }
+
+        .form-section {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+            font-family: Arial, sans-serif;
+        }
+
+        input[type="file"] {
+            padding: 10px 0;
+        }
+
+        button {
+            background-color: #cc0000;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #990000;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .preview-section {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        #canvas {
+            display: block;
+            margin: 20px auto;
+            max-width: 100%;
+            border: 1px solid #ddd;
+        }
+
+        .download-btn {
+            display: block;
+            margin: 20px auto;
+            background-color: #2c5f8d;
+        }
+
+        .download-btn:hover {
+            background-color: #1e4568;
+        }
+
+        .instructions {
+            background: #e8f4f8;
+            padding: 20px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2c5f8d;
+        }
+
+        .instructions h3 {
+            color: #2c5f8d;
+            margin-bottom: 10px;
+        }
+
+        .instructions ol {
+            margin-left: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>NCSU ISE Story Generator</h1>
+        
+        <div class="instructions">
+            <h3>How to Use:</h3>
+            <ol>
+                <li>Fill in your name, graduation year, and ISE story below</li>
+                <li>Upload your photo (recommended: square or portrait orientation)</li>
+                <li>Click "Generate Story Card" to preview</li>
+                <li>Download your personalized ISE story card to share on social media</li>
+            </ol>
+        </div>
+
+        <div class="form-section">
+            <h2 style="margin-bottom: 20px;">Your Information</h2>
+            
+            <div class="form-group">
+                <label for="name">Name *</label>
+                <input type="text" id="name" placeholder="Enter your full name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="gradYear">Graduation Year *</label>
+                <input type="number" id="gradYear" placeholder="e.g., 2024" min="1900" max="2050" required>
+            </div>
+
+            <div class="form-group">
+                <label for="story">Your ISE Story *</label>
+                <textarea id="story" placeholder="Write your ISE story here, sharing why you chose ISE and how it has served your career..." required></textarea>
+                <small style="color: #666;">Share why you chose ISE and how it has impacted your career</small>
+            </div>
+
+            <div class="form-group">
+                <label for="photo">Your Photo *</label>
+                <input type="file" id="photo" accept="image/*" required>
+                <small style="color: #666;">Upload a clear photo of yourself (JPG, PNG)</small>
+            </div>
+
+            <button onclick="generateCard()">Generate Story Card</button>
+        </div>
+
+        <div class="preview-section" id="previewSection" style="display: none;">
+            <h2 style="margin-bottom: 20px; text-align: center;">Preview</h2>
+            <canvas id="canvas" width="1200" height="1224"></canvas>
+            <button class="download-btn" onclick="downloadCard()">Download Story Card</button>
+        </div>
+    </div>
+
+    <script>
+        let canvas, ctx, templateImage;
+
+        // Load the template image
+        window.onload = function() {
+            canvas = document.getElementById('canvas');
+            ctx = canvas.getContext('2d');
+            
+            // You'll need to host the template image or embed it as base64
+            // For now, we'll create it programmatically
+        };
+
+        async function generateCard() {
+            const name = document.getElementById('name').value.trim();
+            const gradYear = document.getElementById('gradYear').value.trim();
+            const story = document.getElementById('story').value.trim();
+            const photoInput = document.getElementById('photo');
+
+            // Validation
+            if (!name || !gradYear || !story || !photoInput.files[0]) {
+                alert('Please fill in all fields and upload a photo');
+                return;
+            }
+
+            // Show preview section
+            document.getElementById('previewSection').style.display = 'block';
+
+            // Draw the template
+            await drawTemplate(name, gradYear, story, photoInput.files[0]);
+            
+            // Scroll to preview
+            document.getElementById('previewSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        async function drawTemplate(name, gradYear, story, photoFile) {
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+
+            // Clear canvas
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw header background
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, 0, canvas.width, 240);
+
+            // Draw header text
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '28px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('NORTH CAROLINA STATE UNIVERSITY   INDUSTRIAL &', canvas.width / 2, 50);
+            ctx.fillText('SYSTEMS ENGINEERING', canvas.width / 2, 90);
+
+            ctx.font = 'bold 110px Arial';
+            ctx.fillText('MY ISE STORY', canvas.width / 2, 200);
+
+            // Draw red banner
+            ctx.fillStyle = '#cc0000';
+            ctx.fillRect(0, 240, canvas.width, 140);
+
+            // Draw ISE logo area (white text on red)
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'italic bold 60px Arial';
+            ctx.textAlign = 'left';
+            ctx.fillText('ise', 20, 320);
+
+            ctx.font = '24px Arial';
+            ctx.fillText('EDWARD P. FITTS DEPARTMENT OF', 190, 295);
+            ctx.fillText('INDUSTRIAL AND SYSTEMS ENGINEERING', 190, 330);
+
+            // Draw photo placeholder
+            const photoX = 10;
+            const photoY = 385;
+            const photoWidth = 410;
+            const photoHeight = 635;
+
+            // Draw white background for photo
+            ctx.fillStyle = '#f5f5f5';
+            ctx.fillRect(photoX, photoY, photoWidth, photoHeight);
+
+            // Load and draw user photo
+            const userPhoto = await loadImage(photoFile);
+            drawImageScaled(ctx, userPhoto, photoX, photoY, photoWidth, photoHeight);
+
+            // Draw red text box
+            const textBoxX = 420;
+            const textBoxY = 385;
+            const textBoxWidth = 770;
+            const textBoxHeight = 635;
+
+            ctx.fillStyle = '#cc0000';
+            ctx.fillRect(textBoxX, textBoxY, textBoxWidth, textBoxHeight);
+
+            // Draw the story text
+            ctx.fillStyle = '#000000';
+            ctx.font = 'italic 26px Arial';
+            ctx.textAlign = 'left';
+            
+            // Word wrap the story
+            const maxWidth = textBoxWidth - 40;
+            const lineHeight = 35;
+            let y = textBoxY + 40;
+
+            // Add the story
+            wrapText(ctx, story, textBoxX + 20, y, maxWidth, lineHeight);
+
+            // Add name at the bottom of text box
+            ctx.font = 'italic bold 28px Arial';
+            ctx.fillText(`- ${name}, Class of ${gradYear}`, textBoxX + 20, textBoxY + textBoxHeight - 30);
+
+            // Draw bottom banner
+            ctx.fillStyle = '#2c5f8d';
+            ctx.fillRect(0, 1020, canvas.width, 204);
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 32px Arial';
+            ctx.textAlign = 'left';
+            ctx.fillText('Share your NCSU ISE story!', 20, 1075);
+
+            ctx.font = '22px Arial';
+            const bottomText = 'Create a profile like this using the QR code and share on your social';
+            ctx.fillText(bottomText, 20, 1125);
+            ctx.fillText('media AND have a chance to be featured on NCSU ISE media', 20, 1160);
+            ctx.fillText('channels', 20, 1195);
+        }
+
+        function loadImage(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        resolve(img);
+                    };
+                    img.onerror = reject;
+                    img.src = e.target.result;
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function drawImageScaled(ctx, img, x, y, width, height) {
+            // Calculate scaling to cover the area while maintaining aspect ratio
+            const scale = Math.max(width / img.width, height / img.height);
+            const scaledWidth = img.width * scale;
+            const scaledHeight = img.height * scale;
+            
+            // Center the image
+            const offsetX = x + (width - scaledWidth) / 2;
+            const offsetY = y + (height - scaledHeight) / 2;
+            
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(x, y, width, height);
+            ctx.clip();
+            ctx.drawImage(img, offsetX, offsetY, scaledWidth, scaledHeight);
+            ctx.restore();
+        }
+
+        function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+            const words = text.split(' ');
+            let line = '';
+            let testLine = '';
+            let currentY = y;
+
+            for (let i = 0; i < words.length; i++) {
+                testLine = line + words[i] + ' ';
+                const metrics = ctx.measureText(testLine);
+                
+                if (metrics.width > maxWidth && i > 0) {
+                    ctx.fillText(line, x, currentY);
+                    line = words[i] + ' ';
+                    currentY += lineHeight;
+                } else {
+                    line = testLine;
+                }
+            }
+            ctx.fillText(line, x, currentY);
+        }
+
+        function downloadCard() {
+            const canvas = document.getElementById('canvas');
+            const link = document.createElement('a');
+            const name = document.getElementById('name').value.replace(/\s+/g, '_');
+            link.download = `ISE_Story_${name}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+    </script>
+</body>
+</html>
