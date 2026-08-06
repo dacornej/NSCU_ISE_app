@@ -1,0 +1,14 @@
+# Source PowerPoint templates — IISE's originals, not ours to redistribute.
+# The extracted background frames live in app/assets/frames/ instead.
+*.pptx
+
+# Placeholder headshots pulled out of the decks carry a "© Getty Images" tag.
+# Never commit these.
+ISE_Story_*.png
+test-portrait.jpg
+test-landscape.jpg
+
+.DS_Store
+
+# Local preview log
+/tmp/iseday-serve.log
