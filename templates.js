@@ -49,10 +49,10 @@ const nameField = {
 };
 
 const titleField = {
-  key: 'title', type: 'textarea', rows: 3, max: 90,
-  label: 'Title, affiliation, location',
+  key: 'title', type: 'textarea', rows: 3, max: 95,
+  label: 'Title, affiliation, NC State degree & class year',
   hint: 'One per line',
-  placeholder: 'Senior, Industrial Engineering\nNC State University\nRaleigh, NC'
+  placeholder: 'Process Engineer\nDelta Air Lines\nB.S. Industrial Engineering, Class of 2015'
 };
 
 const storyField = (label, placeholder) => ({
@@ -85,13 +85,13 @@ export const TEMPLATES = [
     slots: [
       { box: { x: 13.04, y: 33.14, w: 36.96, h: 36.33 }, align: 'left', autofit: true,
         paragraphs: [{ from: 'story', font: 'Montserrat', pt: 24, weight: 400, color: WHITE }] },
-      { box: { x: 57.75, y: 64.93, w: 32.72, h: 4.13 }, align: 'center',
+      { box: { x: 57.75, y: 64.93, w: 32.72, h: 4.13 }, align: 'center', fitLines: true, autofit: true,
         paragraphs: [{ from: 'name', font: 'Montserrat', pt: 30, weight: 700, color: WHITE }] },
-      { box: { x: 57.75, y: 70.30, w: 32.72, h: 10.64 }, align: 'center', autofit: true,
+      { box: { x: 57.75, y: 70.30, w: 32.72, h: 10.64 }, align: 'center', fitLines: true, autofit: true,
         paragraphs: [{ from: 'title', font: 'Montserrat', pt: 18, weight: 700, color: WHITE }] }
     ],
     footer: footerAt(51.32, 83.61, '#0CA9EC', WHITE),
-    cobrand: { x: 6, y: 70.5, w: 30, variant: 'white' }
+    cobrand: { x: 6, y: 70.2, w: 36, variant: 'white' }
   },
 
   {
@@ -104,8 +104,8 @@ export const TEMPLATES = [
     fields: [storyField(
       'Your ISE quirk',
       'I can\'t walk through a grocery store without redesigning the checkout queue in my head.'
-    ), nameField, { ...titleField, rows: 2, max: 60, label: 'Title and affiliation',
-      placeholder: 'Senior, Industrial Engineering\nNC State University' }],
+    ), nameField, { ...titleField, rows: 2, max: 70,
+      placeholder: 'Process Engineer, Delta Air Lines\nB.S. ISE, Class of 2015' }],
     photo: { shape: 'ellipse', x: 52.70, y: 30.22, w: 45.03, h: 36.33 },
     slots: [
       // The story field starts on white and runs onto the teal wedge, which is
@@ -114,14 +114,14 @@ export const TEMPLATES = [
       { box: { x: 5.93, y: 32.18, w: 38.88, h: 36.33 }, align: 'left', autofit: true, minScale: 0.75,
         paragraphs: [{ from: 'story', font: 'Montserrat', pt: 24, weight: 400, color: NAVY }] },
       // Name and title land on the dark navy wedge, so they invert to white.
-      { box: { x: 58.34, y: 69.31, w: 32.72, h: 4.13 }, align: 'center',
+      { box: { x: 58.34, y: 69.31, w: 32.72, h: 4.13 }, align: 'center', fitLines: true, autofit: true,
         paragraphs: [{ from: 'name', font: 'Montserrat', pt: 30, weight: 700, color: WHITE }] },
       // Height trimmed from 10.64: below ~81% the art turns light again.
-      { box: { x: 58.85, y: 73.75, w: 32.72, h: 7.0 }, align: 'center', autofit: true,
+      { box: { x: 58.85, y: 73.75, w: 32.72, h: 7.0 }, align: 'center', fitLines: true, autofit: true,
         paragraphs: [{ from: 'title', font: 'Montserrat', pt: 18, weight: 700, color: WHITE }] }
     ],
     footer: null,                                    // baked into the frame art
-    cobrand: { x: 6, y: 71, w: 30, variant: 'color' }
+    cobrand: { x: 6, y: 70.5, w: 36, variant: 'color' }
   },
 
   {
@@ -134,13 +134,12 @@ export const TEMPLATES = [
     fields: [storyField(
       'The moment it clicked',
       'The moment, project, or class that made me realize: yes, I am definitely an industrial and systems engineer.'
-    ), nameField, { ...titleField, label: 'Title and organization', max: 70,
-      placeholder: 'Senior, Industrial Engineering\nNC State University' }],
+    ), nameField, titleField],
     photo: { shape: 'ellipse', x: 50.84, y: 27.48, w: 42.55, h: 34.33 },
     slots: [
       { box: { x: 5.43, y: 24.99, w: 36.17, h: 25.85 }, align: 'left', autofit: true,
         paragraphs: [{ from: 'story', font: 'Montserrat', pt: 24, weight: 400, color: WHITE }] },
-      { box: { x: 50.00, y: 66.09, w: 44.34, h: 13.38 }, align: 'center', autofit: true,
+      { box: { x: 50.00, y: 66.09, w: 44.34, h: 13.38 }, align: 'center', fitLines: true, autofit: true,
         inset: { x: 1.58, y: 1.13 },
         paragraphs: [
           { from: 'name', font: 'MavenPro', pt: 28, weight: 700, color: WHITE, uppercase: true },
@@ -148,7 +147,7 @@ export const TEMPLATES = [
         ] }
     ],
     footer: footerAt(2.87, 79.47, '#05DEDD', WHITE),
-    cobrand: { x: 5.5, y: 54, w: 30, variant: 'white' }
+    cobrand: { x: 5.5, y: 53.5, w: 36, variant: 'white' }
   },
 
   {
@@ -161,13 +160,12 @@ export const TEMPLATES = [
     fields: [storyField(
       'The moment it clicked',
       'The moment, project, or class that made me realize: yes, I am definitely an industrial and systems engineer.'
-    ), nameField, { ...titleField, label: 'Title and organization', max: 70,
-      placeholder: 'Senior, Industrial Engineering\nNC State University' }],
+    ), nameField, titleField],
     photo: { shape: 'rect', x: 6.75, y: 29.59, w: 37.71, h: 28.98 },
     slots: [
       { box: { x: 52.61, y: 29.37, w: 42.80, h: 25.85 }, align: 'left', autofit: true,
         paragraphs: [{ from: 'story', font: 'Montserrat', pt: 24, weight: 400, color: NAVY }] },
-      { box: { x: 6.61, y: 60.13, w: 37.71, h: 13.38 }, align: 'center', autofit: true,
+      { box: { x: 6.61, y: 60.13, w: 37.71, h: 13.38 }, align: 'center', fitLines: true, autofit: true,
         inset: { x: 1.58, y: 1.13 },
         paragraphs: [
           { from: 'name', font: 'MavenPro', pt: 28, weight: 700, color: NAVY, uppercase: true },
@@ -175,7 +173,7 @@ export const TEMPLATES = [
         ] }
     ],
     footer: null,                                    // baked into the frame art
-    cobrand: { x: 53, y: 60, w: 30, variant: 'color' }
+    cobrand: { x: 53, y: 60, w: 36, variant: 'color' }
   },
 
   {
@@ -188,8 +186,7 @@ export const TEMPLATES = [
     fields: [wordField, storyField(
       'Why that word?',
       'Write your reasoning here — what makes ISE unique as a discipline?'
-    ), nameField, { ...titleField, label: 'Title and organization', max: 70,
-      placeholder: 'Senior, Industrial Engineering\nNC State University' }],
+    ), nameField, titleField],
     photo: { shape: 'ellipse', x: 6.80, y: 29.65, w: 39.42, h: 31.60 },
     slots: [
       { box: { x: 21.92, y: 19.02, w: 77.57, h: 5.51 }, align: 'left', autofit: true, maxLines: 1,
@@ -197,7 +194,7 @@ export const TEMPLATES = [
       { box: { x: 54.76, y: 30.20, w: 38.44, h: 28.41 }, align: 'left', autofit: true,
         inset: { x: 1.0, y: 0.71 },
         paragraphs: [{ from: 'story', font: 'Montserrat', pt: 28, weight: 400, color: WHITE }] },
-      { box: { x: 17.95, y: 63.22, w: 34.32, h: 20.25 }, align: 'left', autofit: true,
+      { box: { x: 17.95, y: 63.22, w: 34.32, h: 20.25 }, align: 'left', fitLines: true, autofit: true,
         inset: { x: 1.58, y: 1.13 },
         paragraphs: [
           { from: 'name', font: 'MavenPro', pt: 28, weight: 700, color: '#FFD000', uppercase: true },
@@ -205,7 +202,7 @@ export const TEMPLATES = [
         ] }
     ],
     footer: null,                                    // baked into the frame art
-    cobrand: { x: 56, y: 63, w: 30, variant: 'white' }
+    cobrand: { x: 54, y: 63, w: 36, variant: 'white' }
   },
 
   {
@@ -218,8 +215,7 @@ export const TEMPLATES = [
     fields: [wordField, storyField(
       'Why that word?',
       'Write your reasoning here — what makes ISE unique as a discipline?'
-    ), nameField, { ...titleField, label: 'Title and organization', max: 70,
-      placeholder: 'Senior, Industrial Engineering\nNC State University' }],
+    ), nameField, titleField],
     photo: { shape: 'rect', x: 55.89, y: 32.21, w: 38.36, h: 31.58 },
     slots: [
       { box: { x: 4.45, y: 19.21, w: 89.80, h: 5.51 }, align: 'left', autofit: true, maxLines: 1,
@@ -229,7 +225,7 @@ export const TEMPLATES = [
         paragraphs: [{ from: 'story', font: 'Montserrat', pt: 28, weight: 400, color: '#0D2A51' }] },
       // The source box runs off-canvas (x 71.76 + w 50.83 = 122%), so it is
       // re-seated under the photo on the dark navy curve — hence white type.
-      { box: { x: 55.89, y: 69.00, w: 38.36, h: 14.00 }, align: 'center', autofit: true,
+      { box: { x: 55.89, y: 69.00, w: 38.36, h: 14.00 }, align: 'center', fitLines: true, autofit: true,
         inset: { x: 1.58, y: 1.13 },
         paragraphs: [
           { from: 'name', font: 'MavenPro', pt: 28, weight: 700, color: WHITE, uppercase: true },
@@ -237,7 +233,7 @@ export const TEMPLATES = [
         ] }
     ],
     footer: footerAt(47.64, 84.02, '#0CA9EC', WHITE),
-    cobrand: { x: 9, y: 64, w: 30, variant: 'color' }
+    cobrand: { x: 9, y: 64, w: 36, variant: 'color' }
   }
 ];
 

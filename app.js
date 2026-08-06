@@ -79,16 +79,18 @@ function layout(ctx, slot, W, scale) {
   const maxW = (slot.box.w - inset.x * 2) / 100 * W;
   const lines = [];
   let h = 0;
+  let intended = 0;                    // lines the user actually typed
 
   for (const p of slot.paragraphs) {
     const raw = (state.values[p.from] || '').trim();
     if (!raw) continue;
     const text = p.uppercase ? raw.toUpperCase() : raw;
+    intended += text.split('\n').filter((l) => l.trim() !== '').length;
     ctx.font = fontStr(p, W, scale);
     const lh = ptPx(p.pt, W) * scale * (p.lineHeight || 1.2);
     for (const l of wrap(ctx, text, maxW)) { lines.push({ text: l, p, lh }); h += lh; }
   }
-  return { lines, height: h };
+  return { lines, height: h, intended };
 }
 
 /**
@@ -113,7 +115,12 @@ function drawSlot(ctx, slot, W, H) {
     const floor = slot.minScale ?? 0.6;
     const tooTall = () => out.height > bh;
     const tooMany = () => slot.maxLines && out.lines.length > slot.maxLines;
-    while ((tooTall() || tooMany()) && scale > floor) {
+    // `fitLines` slots are the ones whose form field says "one per line" —
+    // a name, a job title, a degree. Letting those wrap strands a word on its
+    // own line ("…Class of / 2015"), so shrink the type to keep the breaks the
+    // user actually typed.
+    const wrapped = () => slot.fitLines && out.lines.length > out.intended;
+    while ((tooTall() || tooMany() || wrapped()) && scale > floor) {
       scale -= 0.02;
       out = layout(ctx, slot, W, scale);
     }
@@ -171,9 +178,12 @@ function drawCobrand(ctx, tpl, W, H) {
   const logo = state.logos[c.variant];
   if (!c || !logo) return;
 
+  // Rule and gap are proportional to the lockup width, so resizing `cobrand.w`
+  // scales the whole mark as a unit instead of leaving a hairline rule under a
+  // large logo.
   const w = c.w / 100 * W;
-  const ruleH = 0.35 / 100 * H;
-  const gap = 1.0 / 100 * H;
+  const ruleH = w * 0.014;
+  const gap = w * 0.038;
   const x = c.x / 100 * W;
   const y = c.y / 100 * H;
 
